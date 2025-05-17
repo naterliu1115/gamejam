@@ -65,6 +65,7 @@ namespace Platformer.Mechanics
         private InputAction m_PushAction;
         private InputAction m_KickAction;
         private InputAction m_RescueAction;
+        private InputAction m_Interactive;
 
         [Header("Wall Jump Settings")]
         public float wallJumpVerticalForceMultiplier = 1.0f; // 壁跳專用的垂直力量乘數
@@ -75,6 +76,7 @@ namespace Platformer.Mechanics
 
         public Bounds Bounds => collider2d.bounds;
 
+        public List<NPCController> NPCs = new List<NPCController>();
         void Awake()
         {
             health = GetComponent<Health>();
@@ -89,6 +91,7 @@ namespace Platformer.Mechanics
             m_PushAction = InputSystem.actions.FindAction("Player/Push");
             m_KickAction = InputSystem.actions.FindAction("Player/Kick");
             m_RescueAction = InputSystem.actions.FindAction("Player/Rescue");
+            m_Interactive = InputSystem.actions.FindAction("Player/Interactive");
 
             m_MoveAction.Enable();
             m_JumpAction.Enable();
@@ -96,10 +99,30 @@ namespace Platformer.Mechanics
             m_PushAction.Enable();
             m_KickAction.Enable();
             m_RescueAction.Enable();
+            m_Interactive.Enable();
         }
 
         protected override void Update()
         {
+            if (m_Interactive.WasPressedThisFrame())
+            {
+                //看看身邊是否有NPC
+                ContactFilter2D filter = new ContactFilter2D();
+                filter.SetLayerMask(LayerMask.GetMask("People"));
+                filter.useTriggers = true;
+                List<Collider2D> colliders = new List<Collider2D>();
+                collider2d.Overlap(filter, colliders);
+
+                foreach(var i in colliders)
+                {
+                    if (NPCs.Exists(x => x.gameObject == i.gameObject)) continue;
+                    NPCController NPC = i.GetComponent<NPCController>();
+                    if (NPC == null) continue;
+                    NPC.Player = this;
+                    NPCs.Add(NPC);
+                    break;
+                }
+            }
             if (wallJumpCooldownTimer > 0)
                 wallJumpCooldownTimer -= Time.deltaTime;
 
