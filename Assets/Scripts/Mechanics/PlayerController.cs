@@ -66,6 +66,13 @@ namespace Platformer.Mechanics
         private InputAction m_KickAction;
         private InputAction m_RescueAction;
 
+        [Header("Wall Jump Settings")]
+        public float wallJumpVerticalForceMultiplier = 1.0f; // 壁跳專用的垂直力量乘數
+        public float wallJumpCooldownDuration = 0.15f;      // 壁跳後的短暫冷卻時間
+        public float wallJumpIgnoreStopJumpDuration = 0.3f; // 壁跳後忽略 stopJump 的持續時間
+        private float ignoreStopJumpTimer = 0f;
+        private float wallJumpCooldownTimer = 0f;
+
         public Bounds Bounds => collider2d.bounds;
 
         void Awake()
@@ -93,6 +100,12 @@ namespace Platformer.Mechanics
 
         protected override void Update()
         {
+            if (wallJumpCooldownTimer > 0)
+                wallJumpCooldownTimer -= Time.deltaTime;
+
+            if (ignoreStopJumpTimer > 0)
+                ignoreStopJumpTimer -= Time.deltaTime;
+
             // 處理暈眩狀態
             if (isStunned)
             {
@@ -204,12 +217,14 @@ namespace Platformer.Mechanics
                 velocity.y = jumpTakeOffSpeed * model.jumpModifier;
                 jump = false;
             }
-            else if (stopJump)
+            else if (stopJump && ignoreStopJumpTimer <= 0f)
             {
                 stopJump = false;
                 if (velocity.y > 0)
                 {
+                    float oldVelocityY = velocity.y;
                     velocity.y = velocity.y * model.jumpDeceleration;
+                    Debug.Log($"[PlayerController] ComputeVelocity: stopJump logic applied (after ignore timer). Old velocity.y: {oldVelocityY}, New velocity.y: {velocity.y}, model.jumpDeceleration: {model.jumpDeceleration}");
                 }
             }
 
@@ -312,6 +327,12 @@ namespace Platformer.Mechanics
             // 發送壁跳事件
             var ev = Schedule<PlayerWallJump>();
             ev.player = this;
+
+            Debug.Log("[PlayerController] PerformWallJump: PlayerWallJump 事件已排程。");
+
+            wallJumpCooldownTimer = wallJumpCooldownDuration; // 啟動壁跳冷卻
+            ignoreStopJumpTimer = wallJumpIgnoreStopJumpDuration; // 啟動忽略 stopJump 計時器
+            stopJump = false; // 確保壁跳開始時 stopJump 狀態是乾淨的
         }
         #endregion
 
