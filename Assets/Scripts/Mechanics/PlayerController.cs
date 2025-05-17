@@ -44,7 +44,7 @@ namespace Platformer.Mechanics
         // 壁跳相關
         public bool IsWallSliding { get; private set; }
         private bool isTouchingWall = false;
-        private float wallCheckDistance = 0.2f;
+        private float wallCheckDistance = 0.5f;
 
         // 推動相關
         public bool isPushing = false;
@@ -242,7 +242,7 @@ namespace Platformer.Mechanics
                 // 檢測前方是否有牆壁
                 isTouchingWall = Physics2D.Raycast(
                     transform.position,
-                    new Vector2(move.x, 0),
+                    new Vector2(move.x, 0).normalized,
                     wallCheckDistance,
                     LayerMask.GetMask("Ground")
                 );
