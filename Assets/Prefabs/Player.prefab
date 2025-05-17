@@ -66,6 +66,9 @@ MonoBehaviour:
   isPushing: 0
   isKicking: 0
   isStunned: 0
+  wallJumpVerticalForceMultiplier: 1
+  wallJumpCooldownDuration: 0.15
+  wallJumpIgnoreStopJumpDuration: 0.3
 --- !u!212 &212064061491315838
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -315,7 +318,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0069004297, y: 0.42487133}
+  m_Offset: {x: -0.0069004297, y: 0.31270468}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
@@ -325,5 +328,5 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.3829391, y: 0.8404987}
+  m_Size: {x: 0.3829391, y: 0.6161654}
   m_EdgeRadius: 0
