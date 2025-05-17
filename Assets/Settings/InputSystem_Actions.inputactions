@@ -108,7 +108,7 @@
                     "name": "Push",
                     "type": "Button",
                     "id": "b5d9c6e7-f8d2-4c3a-9e8b-1a2b3c4d5e6f",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -551,33 +551,11 @@
                 },
                 {
                     "name": "",
-                    "id": "a1b2c3d4-e5f6-4a5b-6c7d-8e9f0a1b2c3d",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "DropDown",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "d4c5b6a7-8e9f-0a1b-2c3d-4e5f6a7b8c9d",
                     "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "DropDown",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
-                    "path": "<Gamepad>/dpad/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
                     "action": "DropDown",
                     "isComposite": false,
                     "isPartOfComposite": false
