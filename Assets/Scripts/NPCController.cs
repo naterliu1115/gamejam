@@ -24,12 +24,13 @@ namespace Platformer.Mechanics
             bool IsMove = false;
             if (Player != null)
             {
+                int Index = Player.NPCs.IndexOf(this) + 1;
                 float D = Vector3.Distance(transform.position, Player.transform.position);
                 //沒有太近
-                if (D > 0.5f)
+                if (D > 0.5f * Index)
                 {
                     float XD = Mathf.Abs(transform.position.x - Player.transform.position.x);
-                    if (XD > 0.5f)
+                    if (XD > 0.5f * Index)
                     {
                         //太遠了 並且玩家洛地
                         if (D > 6f && Player.IsGrounded)

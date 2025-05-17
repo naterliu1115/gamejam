@@ -117,7 +117,7 @@
                     "name": "Kick",
                     "type": "Button",
                     "id": "7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -126,7 +126,16 @@
                     "name": "Rescue",
                     "type": "Button",
                     "id": "3e4d5f6a-7b8c-9d0e-1f2a-3b4c5d6e7f8a",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Interactive",
+                    "type": "Button",
+                    "id": "dbcff11f-9066-4f15-b0a4-9b2226fd74e9",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -669,6 +678,17 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Rescue",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1cf0bb11-19e6-46c7-90aa-2b86e339a9b9",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Interactive",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
