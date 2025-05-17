@@ -41,7 +41,7 @@ namespace Platformer.Model
         /// <summary>
         /// 壁跳相關參數
         /// </summary>
-        public float wallJumpForce = 7f;
+        public float wallJumpForce = 100f;
         public float wallSlideSpeed = 0.3f;
 
         /// <summary>

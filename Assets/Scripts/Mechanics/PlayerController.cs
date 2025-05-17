@@ -163,7 +163,8 @@ namespace Platformer.Mechanics
             }
 
             UpdateJumpState();
-            base.Update();
+            ComputeVelocity();
+            //base.Update();
         }
 
         void UpdateJumpState()
@@ -219,8 +220,29 @@ namespace Platformer.Mechanics
 
             animator.SetBool("grounded", IsGrounded);
             animator.SetFloat("velocityX", Mathf.Abs(velocity.x) / maxSpeed);
-
-            targetVelocity = move * maxSpeed;
+            //print(targetVelocity.x);
+            if (move.x > 0)
+            {
+                targetVelocity.x += 0.5f;
+            }
+            else if (move.x < 0)
+            {
+                targetVelocity.x -= 0.5f;
+            }
+            else
+            {
+                targetVelocity.x = 0;
+            }
+            if (targetVelocity.x > maxSpeed)
+            {
+                targetVelocity.x -= 0.5f;
+            }
+            else if (targetVelocity.x < -maxSpeed)
+            {
+                targetVelocity.x += 0.5f;
+            }
+            //print(targetVelocity.x);
+            //targetVelocity = move * maxSpeed;
         }
 
         public enum JumpState
@@ -275,8 +297,10 @@ namespace Platformer.Mechanics
         void PerformWallJump()
         {
             // 從牆壁反方向跳躍
-            velocity.y = jumpTakeOffSpeed * model.jumpModifier;
-            velocity.x = -move.x * model.wallJumpForce;
+            //velocity.y += jumpTakeOffSpeed * model.jumpModifier;
+            //velocity.x += -move.x * model.wallJumpForce;
+            targetVelocity.x += 10f * (move.x > 0 ? -1 : 1);
+            velocity.y += 10f;
 
             // 重置壁滑狀態
             IsWallSliding = false;
