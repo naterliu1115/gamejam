@@ -7,6 +7,7 @@ namespace Platformer.Mechanics
         /// <summary> ���H���ؼ� �p�G�ONull�h�N���S�ؼ� </summary>
         public PlayerController Player;
         private Animator animator;
+        private SpriteRenderer spriteRenderer;
 
         void Awake()
         {
@@ -14,6 +15,11 @@ namespace Platformer.Mechanics
             if (animator == null)
             {
                 Debug.LogError("NPCController is missing Animator component on " + gameObject.name, this);
+            }
+            spriteRenderer = GetComponent<SpriteRenderer>();
+            if (spriteRenderer == null)
+            {
+                Debug.LogError("NPCController is missing SpriteRenderer component on " + gameObject.name, this);
             }
         }
 
@@ -76,6 +82,21 @@ namespace Platformer.Mechanics
             {
                 animator.SetFloat("velocityX", Mathf.Abs(velocity.x));
             }
+
+            // --- Added turning logic based on targetVelocity.x ---
+            if (spriteRenderer != null)
+            {
+                if (targetVelocity.x > 0.01f) // Intending to move right
+                {
+                    spriteRenderer.flipX = false;
+                }
+                else if (targetVelocity.x < -0.01f) // Intending to move left
+                {
+                    spriteRenderer.flipX = true;
+                }
+            }
+            // --- End turning logic ---
+
             //base.Update();
         }
     }
