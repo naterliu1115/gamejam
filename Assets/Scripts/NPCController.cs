@@ -4,8 +4,18 @@ namespace Platformer.Mechanics
 {
     public class NPCController : KinematicObject
     {
-        /// <summary> ¸òÀHªº¥Ø¼Ð ¦pªG¬ONull«h¥Nªí¨S¥Ø¼Ð </summary>
+        /// <summary> ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½pï¿½Gï¿½ONullï¿½hï¿½Nï¿½ï¿½ï¿½Sï¿½Ø¼ï¿½ </summary>
         public PlayerController Player;
+        private Animator animator;
+
+        void Awake()
+        {
+            animator = GetComponent<Animator>();
+            if (animator == null)
+            {
+                Debug.LogError("NPCController is missing Animator component on " + gameObject.name, this);
+            }
+        }
 
         protected override void OnEnable()
         {
@@ -26,22 +36,22 @@ namespace Platformer.Mechanics
             {
                 int Index = Player.NPCs.IndexOf(this) + 1;
                 float D = Vector3.Distance(transform.position, Player.transform.position);
-                //¨S¦³¤Óªñ
+                //ï¿½Sï¿½ï¿½ï¿½Óªï¿½
                 if (D > 0.5f * Index)
                 {
                     float XD = Mathf.Abs(transform.position.x - Player.transform.position.x);
                     if (XD > 0.5f * Index)
                     {
-                        //¤Ó»·¤F ¨Ã¥Bª±®a¬¥¦a
+                        //ï¿½Ó»ï¿½ï¿½F ï¿½Ã¥Bï¿½ï¿½ï¿½aï¿½ï¿½ï¿½a
                         if (D > 6f && Player.IsGrounded)
                         {
-                            //¶¶²¾
+                            //ï¿½ï¿½ï¿½ï¿½
                             transform.position = Player.transform.position;
                         }
                         else
                         {
                             //print(D);
-                            //¥ªÃäÁÙ¬O¥kÃä
+                            //ï¿½ï¿½ï¿½ï¿½ï¿½Ù¬Oï¿½kï¿½ï¿½
                             if (transform.position.x > Player.transform.position.x)
                             {
                                 targetVelocity.x = -2.8f;
@@ -59,6 +69,12 @@ namespace Platformer.Mechanics
             if (!IsMove)
             {
                 targetVelocity = Vector2.zero;
+            }
+
+            // Update Animator parameter
+            if (animator != null)
+            {
+                animator.SetFloat("velocityX", Mathf.Abs(velocity.x));
             }
             //base.Update();
         }
