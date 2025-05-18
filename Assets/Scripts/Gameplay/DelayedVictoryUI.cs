@@ -98,8 +98,28 @@ namespace Platformer.Gameplay
             rescuedRect.pivot = new Vector2(0.5f, 0.5f);
             rescuedRect.sizeDelta = new Vector2(700, 80); // 放大文字區域
 
+            // 計算實際解救的NPC數量
+            int actualRescuedCount = 0;
+            var allTargets = Object.FindObjectsOfType<Mechanics.RescueTarget>();
+            Debug.Log($"找到 {allTargets.Length} 個 RescueTarget 物件");
+
+            foreach (var target in allTargets)
+            {
+                Debug.Log($"RescueTarget: {target.name}, isRescued: {target.isRescued}, isFollowing: {target.isFollowing}");
+                if (target.isRescued)
+                {
+                    actualRescuedCount++;
+                }
+            }
+
+            Debug.Log($"實際解救的NPC數量: {actualRescuedCount}");
+
+            // 更新model中的計數，確保其他地方使用時也是正確的
+            model.rescuedCount = actualRescuedCount;
+            Debug.Log($"更新後的model.rescuedCount: {model.rescuedCount}");
+
             TextMeshProUGUI rescuedText = rescuedObj.AddComponent<TextMeshProUGUI>();
-            rescuedText.text = $"YOU RESCUED {model.rescuedCount} INNOCENT BUNNIES";
+            rescuedText.text = $"YOU RESCUED {actualRescuedCount} INNOCENT BUNNIES";
             rescuedText.font = unispaceFontAsset; // 使用加載的字體資源
             rescuedText.fontSize = 48; // 放大字體
             rescuedText.alignment = TextAlignmentOptions.Center;
