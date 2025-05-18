@@ -35,6 +35,8 @@ namespace Platformer.Mechanics
         public Health health;
         public bool controlEnabled = true;
 
+        public BoxCollider2D AttackBounds;
+
         bool jump;
         Vector2 move;
         SpriteRenderer spriteRenderer;
@@ -189,6 +191,18 @@ namespace Platformer.Mechanics
                 if (m_KickAction.WasPressedThisFrame() && kickCooldownTimer <= 0)
                 {
                     HandleKick();
+                }
+                if (isKicking)
+                {
+                    Collider2D[] Colliders = CheckKickTarget();
+
+                    foreach (var i in Colliders)
+                    {
+                        // 發送踢擊事件
+                        var ev = Schedule<PlayerKick>();
+                        ev.player = this;
+                        ev.target = i.gameObject;
+                    }
                 }
 
                 // 處理救援
@@ -547,46 +561,30 @@ namespace Platformer.Mechanics
         // 處理踢擊
         void HandleKick()
         {
+            if (isKicking) return;
             isKicking = true;
             kickCooldownTimer = model.kickCooldown;
 
             // 觸發踢擊動畫
             animator.SetTrigger("kick");
-
-            // 檢測可踢擊物體或敵人
-            var kickTarget = CheckKickTarget();
-            if (kickTarget != null)
-            {
-                // 發送踢擊事件
-                var ev = Schedule<PlayerKick>();
-                ev.player = this;
-                ev.target = kickTarget;
-            }
-
             // 重置踢擊狀態
             StartCoroutine(ResetKickState());
-        }
-
-        // 重置踢擊狀態
-        IEnumerator ResetKickState()
-        {
-            yield return new WaitForSeconds(0.3f); // 動畫持續時間
-            isKicking = false;
+            // 重置踢擊狀態
+            IEnumerator ResetKickState()
+            {
+                yield return new WaitForSeconds(0.3f); // 動畫持續時間
+                isKicking = false;
+            }
         }
 
         // 檢測踢擊目標
-        GameObject CheckKickTarget()
+        Collider2D[] CheckKickTarget()
         {
             // 檢測前方是否有可踢擊物體
-            float direction = spriteRenderer.flipX ? -1 : 1;
-            RaycastHit2D hit = Physics2D.Raycast(
-                transform.position,
-                new Vector2(direction, 0),
-                1.0f,
-                LayerMask.GetMask("Kickable", "Enemy")
-            );
+            Vector2 Pos = new Vector2(transform.position.x + (GetComponent<SpriteRenderer>().flipX ? -1 : 1) * AttackBounds.offset.x, transform.position.y + AttackBounds.offset.y);
+            Collider2D[] Colliders = Physics2D.OverlapBoxAll(Pos, AttackBounds.size, 0, LayerMask.GetMask("Kickable", "Enemy"));
 
-            return hit.collider?.gameObject;
+            return Colliders;
         }
         #endregion
 
