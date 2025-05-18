@@ -58,6 +58,10 @@ namespace Platformer.Mechanics
         public bool isStunned = false;
         private float stunTimer = 0f;
 
+        // 跳躍動畫控制
+        private bool isAtJumpPeak = false;
+        private float jumpPeakThreshold = 0.3f; // 垂直速度接近0的閾值，較小的值使檢測更精確
+
         // 輸入操作引用
         private InputAction m_MoveAction;
         private InputAction m_JumpAction;
@@ -212,6 +216,10 @@ namespace Platformer.Mechanics
                     jumpState = JumpState.Jumping;
                     jump = true;
                     stopJump = false;
+
+                    // 如果在跳躍頂點暫停了動畫，開始新跳躍時重置狀態
+                    isAtJumpPeak = false;
+                    animator.speed = 1;
                     break;
                 case JumpState.Jumping:
                     if (!IsGrounded)
@@ -224,10 +232,30 @@ namespace Platformer.Mechanics
                     if (IsGrounded)
                     {
                         Schedule<PlayerLanded>().player = this;
-                        jumpState = JumpState.Landed;
+
+                        // 檢查是否應該直接進入 Grounded 狀態（跳過 Landed 狀態）
+                        // 如果角色正在移動，直接進入 Grounded 狀態以加快轉換到奔跑動畫
+                        if (Mathf.Abs(move.x) > 0.1f)
+                        {
+                            jumpState = JumpState.Grounded;
+                            Debug.Log("[PlayerController] 檢測到落地時正在移動，直接進入 Grounded 狀態");
+                        }
+                        else
+                        {
+                            jumpState = JumpState.Landed;
+                        }
+
+                        // 在落地時恢復動畫速度
+                        if (isAtJumpPeak)
+                        {
+                            isAtJumpPeak = false;
+                            animator.speed = 1;
+                            Debug.Log("[PlayerController] 落地檢測：恢復動畫速度");
+                        }
                     }
                     break;
                 case JumpState.Landed:
+                    // 加快從 Landed 到 Grounded 的轉換
                     jumpState = JumpState.Grounded;
                     break;
             }
@@ -256,8 +284,53 @@ namespace Platformer.Mechanics
             else if (move.x < -0.01f)
                 spriteRenderer.flipX = true;
 
+            // 設置動畫參數
             animator.SetBool("grounded", IsGrounded);
-            animator.SetFloat("velocityX", Mathf.Abs(velocity.x) / maxSpeed);
+
+            // 如果剛剛落地且正在移動，確保 velocityX 參數足夠大以觸發 Run 動畫
+            if (IsGrounded && jumpState == JumpState.Landed && Mathf.Abs(move.x) > 0.1f)
+            {
+                animator.SetFloat("velocityX", 0.5f); // 設置一個足夠大的值以確保進入 Run 狀態
+                Debug.Log("[PlayerController] 落地時正在移動，強制設置 velocityX 參數");
+            }
+            else
+            {
+                animator.SetFloat("velocityX", Mathf.Abs(velocity.x) / maxSpeed);
+            }
+
+            animator.SetFloat("velocityY", velocity.y);
+
+            // 檢測跳躍頂點並控制動畫
+            if (!IsGrounded && jumpState == JumpState.InFlight)
+            {
+                // 檢查是否在跳躍頂點附近（垂直速度接近0）
+                if (Mathf.Abs(velocity.y) < jumpPeakThreshold && velocity.y > -jumpPeakThreshold * 2)
+                {
+                    // 如果還沒有暫停動畫，則暫停
+                    if (!isAtJumpPeak)
+                    {
+                        isAtJumpPeak = true;
+                        animator.speed = 0; // 暫停動畫
+                        Debug.Log("[PlayerController] 跳躍頂點檢測：暫停動畫");
+                    }
+                }
+                // 注意：我們不在這裡恢復動畫，而是讓它保持暫停直到落地
+            }
+            else if (isAtJumpPeak && IsGrounded)
+            {
+                // 只有在著地時才恢復動畫
+                isAtJumpPeak = false;
+                animator.speed = 1;
+                Debug.Log("[PlayerController] 著地檢測：恢復動畫");
+
+                // 如果角色正在移動，強制觸發 Run 動畫
+                if (Mathf.Abs(move.x) > 0.1f)
+                {
+                    // 這裡我們直接設置 velocityX 參數為一個較大的值，以確保動畫系統立即轉換到 Run 狀態
+                    animator.SetFloat("velocityX", 0.5f);
+                }
+            }
+
             //print(targetVelocity.x);
             if (move.x > 0)
             {
