@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4873888862777894132}
   - component: {fileID: 536174446270204034}
   - component: {fileID: 6224611374059420617}
+  - component: {fileID: -8049910939778855717}
   m_Layer: 0
   m_Name: "\u96FB\u8996"
   m_TagString: Untagged
@@ -149,3 +150,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fallSpeed: 3.5
   destroyTime: 10
+--- !u!114 &-8049910939778855717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4042242147454753554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1a2842eb6aa54ca6ac723e9457cdc48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
