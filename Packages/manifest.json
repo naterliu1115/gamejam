@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.justinpbarnett.unity-mcp": "https://github.com/justinpbarnett/unity-mcp.git?path=/UnityMcpBridge",
     "com.unity.cinemachine": "3.1.0",
     "com.unity.collab-proxy": "2.8.2",
     "com.unity.connect.share": "4.2.3",
