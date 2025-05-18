@@ -1,0 +1,72 @@
+勝利系統使用說明
+==============
+
+這個系統提供了一個簡單的方法來設置遊戲的勝利區域、UI和特效。
+
+## 快速設置方法
+
+1. 在場景中創建一個空物件（GameObject > Create Empty）
+2. 將物件命名為 "VictorySystemManager"
+3. 添加 VictorySystemSetup 腳本（Add Component > Scripts > Platformer > Gameplay > VictorySystemSetup）
+4. 在 Inspector 中設置參數（如勝利區域位置、大小、顏色等）
+5. 右鍵點擊 VictorySystemSetup 組件，選擇 "一鍵設置勝利系統"
+6. 完成！系統會自動創建勝利區域、UI和特效
+
+## 手動設置方法
+
+如果您想手動設置，可以按照以下步驟：
+
+1. 創建勝利區域：
+   - 創建一個空物件，命名為 "VICTORY"
+   - 添加 Box Collider 2D 組件，設置為觸發器（Is Trigger = true）
+   - 添加 VictoryZone 腳本
+   - 將物件放置在您希望作為終點的位置
+
+2. 創建勝利UI：
+   - 創建一個 Canvas
+   - 添加 SimpleUIManager 腳本
+   - 創建一個 Panel 作為勝利面板
+   - 在面板中添加文本和按鈕
+   - 設置 SimpleUIManager 的引用
+
+3. 創建粒子特效（可選）：
+   - 創建一個 Particle System
+   - 調整粒子系統設置
+   - 將粒子系統拖放到 VictoryZone 的 "Victory Particles" 欄位
+
+4. 添加音效（可選）：
+   - 找一個適合的勝利音效
+   - 將音效拖放到 VictoryZone 的 "Victory Sound Effect" 欄位
+
+## 故障排除
+
+如果勝利UI沒有顯示：
+- 確保場景中有一個帶有 SimpleUIManager 組件的 Canvas
+- 檢查控制台是否有錯誤消息
+- 嘗試使用一鍵設置方法重新創建系統
+
+如果粒子特效沒有播放：
+- 確保粒子系統已正確設置
+- 檢查 VictoryZone 的 "Victory Particles" 欄位是否已設置
+
+如果音效沒有播放：
+- 確保音效文件已導入
+- 檢查 VictoryZone 的 "Victory Sound Effect" 欄位是否已設置
+- 確保音量設置正確
+
+## 自定義
+
+您可以通過修改以下腳本來自定義勝利系統：
+- VictorySystemSetup.cs：一鍵設置系統
+- VictoryZone.cs：勝利區域邏輯
+- SimpleUIManager.cs：UI顯示邏輯
+- PlayerEnteredVictoryZone.cs：勝利事件處理
+
+## 注意事項
+
+- 勝利區域使用 Box Collider 2D 作為觸發器，確保玩家物件有碰撞器
+- 勝利UI使用 Canvas 和 UI 元素，確保場景中有 EventSystem
+- 粒子特效和音效是可選的，但可以增強遊戲體驗
+- 系統會自動處理玩家的勝利動畫和控制禁用
+
+祝您遊戲開發順利！
